@@ -33,9 +33,11 @@ def partition_csv(csv_path: Path, n_partition: int, output_dir: Path):
     output_dir.mkdir(exist_ok=True, parents=True)
     df = pd.read_csv(str(csv_path))
     dfs = np.array_split(df, n_partition)
+    csvs = []
     for i, df in enumerate(dfs):
         df.to_csv(str(output_dir.joinpath(f"partition_csv_{i}.csv")), index=False)
-    return dfs
+        csvs.append(output_dir.joinpath(f"partition_csv_{i}.csv"))
+    return csvs
 
 
 def create_batch_files(key_path: Path, ukbfetch_path: Path, part_csv_files: List[Path], output_dir: Path, n_thread) -> List[Path]:
