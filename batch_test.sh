@@ -8,7 +8,7 @@
 #SBATCH --output=slurm.%N.%j.log    # Standard output and error log
 
 # Source virtual environment (pip)
-source /homes/venv/bin/activate
+source /homes/sli9/venv/bin/activate
 
 # Run python script
 python job.py --csv-file /vol/biodata/data/biobank/40616/csv/ukbb_40616_new_eids.csv --key-path /vol/biodata/data/biobank/40616/key/ukbb.key --ukbfetch-path /vol/biodata/data/biobank/40616/utils/ukbfetch --output-dir /vol/biodata/data/biobank/40616/output --n-thread 0
