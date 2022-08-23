@@ -50,8 +50,8 @@ def create_batch_files(key_path: Path, ukbfetch_path: Path, part_csv_files: List
         command = python_command + f" --key-path {str(key_path)} --ukbfetch-path {str(ukbfetch_path)} " \
                                    f"--csv-file {str(csv_file)} --output-dir {str(output_dir)}  --n-thread {n_thread}"
         batch = sbatch.format(idx + 1) + f"{command}\n"
-        batch_file = temp_batch_file_dir.joinpath("")
-        with open(f"job_{idx}.sh", "r") as file:
+        batch_file = temp_batch_file_dir.joinpath(f"job_{idx}.sh")
+        with open(str(batch_file), "r") as file:
             file.write(batch)
         batch_files.append(batch_file)
     return batch_files
