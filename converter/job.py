@@ -46,6 +46,12 @@ def function(eid, input_dir: Path, output_dir: Path):
     nii_dir = output_dir.joinpath("nii", f"{eid}")
     nii_dir.mkdir(parents=True, exist_ok=True)
 
+    if nii_dir.joinpath("la_2ch.nii.gz").exists() and \
+            nii_dir.joinpath("la_3ch.nii.gz").exists() and \
+            nii_dir.joinpath("la_4ch.nii.gz").exists() and \
+            nii_dir.joinpath("sa.nii.gz").exists():
+        return
+
     zip_dir = input_dir
     la_zip = zip_dir.joinpath(f"{eid}_20208_2_0.zip")
     sa_zip = zip_dir.joinpath(f"{eid}_20209_2_0.zip")
