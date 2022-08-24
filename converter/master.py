@@ -46,7 +46,7 @@ def create_batch_files(input_dir: Path, part_csv_files: List[Path], output_dir: 
     temp_batch_file_dir.mkdir(exist_ok=True, parents=True)
     batch_files = []
     for idx, csv_file in enumerate(part_csv_files):
-        command = python_command + f"--input-dir {str(input_dir)} --csv-file {str(csv_file)} " \
+        command = python_command + f" --input-dir {str(input_dir)} --csv-file {str(csv_file)} " \
                                    f"--output-dir {str(output_dir)}  --n-thread {n_thread}"
         batch = sbatch.format(idx + 1) + f"{command}\n"
         batch_file = temp_batch_file_dir.joinpath(f"job_{idx}.sh")
