@@ -44,6 +44,7 @@ def function(eid, input_dir: Path, output_dir: Path):
     dicom_dir = output_dir.joinpath("dicom", "eid")
     dicom_dir.mkdir(parents=True, exist_ok=True)
     nii_dir = output_dir.joinpath("nii")
+    nii_dir.mkdir(parents=True, exist_ok=True)
 
     zip_dir = input_dir
     sa_zip = zip_dir.joinpath(f"{eid}_20208_2_0.zip")
