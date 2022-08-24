@@ -11,4 +11,4 @@
 source /homes/sli9/venv/bin/activate
 
 # Run python script
-python job.py --input-dir --csv-file /vol/biodata/data/biobank/40616/csv/ukbb_40616_new_eids.csv --output-dir /vol/biodata/data/biobank/40616/output/images --n-thread 0
+python job.py --input-dir /vol/biodata/data/biobank/40616/output/images/zip --csv-file /vol/biodata/data/biobank/40616/csv/ukbb_40616_new_eids.csv --output-dir /vol/biodata/data/biobank/40616/output/images --n-thread 0
