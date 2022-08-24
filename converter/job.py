@@ -41,9 +41,9 @@ def parse_args():
 
 
 def function(eid, input_dir: Path, output_dir: Path):
-    dicom_dir = output_dir.joinpath("dicom", "eid")
+    dicom_dir = output_dir.joinpath("dicom", f"{eid}")
     dicom_dir.mkdir(parents=True, exist_ok=True)
-    nii_dir = output_dir.joinpath("nii")
+    nii_dir = output_dir.joinpath("nii", f"{eid}")
     nii_dir.mkdir(parents=True, exist_ok=True)
 
     zip_dir = input_dir
