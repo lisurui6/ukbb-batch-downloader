@@ -1,9 +1,5 @@
 """
 Master script to partition image csv, and submit one job per partition
-input_dir expects to have subdirectories:
-    /input-dir/csv/ukbb_40606_new_eids.csv
-    /input-dir/utils/ukbfetch
-    /input-dir/key/ukbb.key
 """
 
 import os
