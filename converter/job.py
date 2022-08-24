@@ -47,43 +47,50 @@ def function(eid, input_dir: Path, output_dir: Path):
     nii_dir.mkdir(parents=True, exist_ok=True)
 
     zip_dir = input_dir
-    sa_zip = zip_dir.joinpath(f"{eid}_20208_2_0.zip")
-    la_zip = zip_dir.joinpath(f"{eid}_20209_2_0.zip")
+    la_zip = zip_dir.joinpath(f"{eid}_20208_2_0.zip")
+    sa_zip = zip_dir.joinpath(f"{eid}_20209_2_0.zip")
     assert sa_zip.exists(), f"str({sa_zip}) not exist"
     assert la_zip.exists(), f"str({la_zip}) not exist"
 
-    os.system('unzip -o {0} -d {1}'.format(str(sa_zip), str(dicom_dir)))
+    la_dicom_dir = dicom_dir.joinpath("la")
+    la_dicom_dir.mkdir(parents=True, exist_ok=True)
+    sa_dicom_dir = dicom_dir.joinpath("sa")
+    sa_dicom_dir.mkdir(parents=True, exist_ok=True)
 
-    # Process the manifest file
-    if dicom_dir.joinpath('manifest.cvs').exists():
-        os.system('cp {0} {1}'.format(str(dicom_dir.joinpath('manifest.cvs')),
-                                      str(dicom_dir.joinpath('manifest.csv'))))
-    process_manifest(str(dicom_dir.joinpath('manifest.csv')),
-                     str(dicom_dir.joinpath('manifest2.csv')))
-    df2 = pd.read_csv(str(str(dicom_dir.joinpath('manifest2.csv'))), error_bad_lines=False)
+    os.system('unzip -o {0} -d {1}'.format(str(sa_zip), str(sa_dicom_dir)))
+    os.system('unzip -o {0} -d {1}'.format(str(la_zip), str(la_dicom_dir)))
 
-    # Patient ID and acquisition date
-    pid = df2.at[0, 'patientid']
-    date = dateutil.parser.parse(df2.at[0, 'date'][:11]).date().isoformat()
+    for directory in [la_dicom_dir, sa_dicom_dir]:
+        # Process the manifest file
+        if directory.joinpath('manifest.cvs').exists():
+            os.system('cp {0} {1}'.format(str(directory.joinpath('manifest.cvs')),
+                                          str(directory.joinpath('manifest.csv'))))
+        process_manifest(str(directory.joinpath('manifest.csv')),
+                         str(directory.joinpath('manifest2.csv')))
+        df2 = pd.read_csv(str(str(directory.joinpath('manifest2.csv'))), error_bad_lines=False)
 
-    # Organise the dicom files
-    # Group the files into subdirectories for each imaging series
-    for series_name, series_df in df2.groupby('series discription'):
-        # series_dir = os.path.join(dicom_dir, series_name)
-        series_dir = dicom_dir.joinpath(series_name)
-        series_dir.mkdir(parents=True, exist_ok=True)
-        # if not os.path.exists(series_dir):
-        #     os.mkdir(series_dir)
-        series_files = [os.path.join(str(dicom_dir), x) for x in series_df['filename']]
-        os.system('mv {0} {1}'.format(' '.join(series_files), series_dir))
+        # Patient ID and acquisition date
+        pid = df2.at[0, 'patientid']
+        date = dateutil.parser.parse(df2.at[0, 'date'][:11]).date().isoformat()
 
-        # Convert dicom files and annotations into nifti images
-        dset = Biobank_Dataset(str(dicom_dir))
-        dset.read_dicom_images()
-        dset.convert_dicom_to_nifti(str(nii_dir))
+        # Organise the dicom files
+        # Group the files into subdirectories for each imaging series
+        for series_name, series_df in df2.groupby('series discription'):
+            # series_dir = os.path.join(dicom_dir, series_name)
+            series_dir = directory.joinpath(series_name)
+            series_dir.mkdir(parents=True, exist_ok=True)
+            # if not os.path.exists(series_dir):
+            #     os.mkdir(series_dir)
+            series_files = [os.path.join(str(directory), x) for x in series_df['filename']]
+            os.system('mv {0} {1}'.format(' '.join(series_files), series_dir))
 
-        # Remove intermediate files
-        # os.system('rm -rf {0}'.format(str(dicom_dir)))
+            # Convert dicom files and annotations into nifti images
+            dset = Biobank_Dataset(str(directory))
+            dset.read_dicom_images()
+            dset.convert_dicom_to_nifti(str(nii_dir))
+
+            # Remove intermediate files
+            # os.system('rm -rf {0}'.format(str(dicom_dir)))
 
     return "finished"
 
